@@ -1,0 +1,97 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: dam-api
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /damProviders:
+    x-swagger-router-controller: damProviderController
+    post:
+      description: create a Dam Provider
+      operationId: createDamProviderRest
+      parameters:
+        - name: damProviderRequest
+          in: body
+          description: basic info to create a Dam Provider
+          required: true
+          schema:
+            $ref: "#/definitions/CreateDamProviderRequest"
+      responses:
+        "201":
+          description: success
+          schema:
+            $ref: "#/definitions/CreateDamProviderResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /damProviders/{key}:
+    x-swagger-router-controller: damProviderController
+    get:
+      description: read Dam Provider
+      operationId: readDamProviderRest
+      parameters:
+        - name: key
+          in: path
+          type: string
+          description: key of the Dam Provider
+          required: true
+      responses:
+        "200":
+          description: success
+          schema:
+            $ref: "#/definitions/ReadDamProviderResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  CreateDamProviderRequest:
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      schedule:
+        $ref: "#/definitions/CreateScheduleRequest"
+    required:
+      - name
+      - type
+  CreateScheduleRequest:
+    properties:
+      start:
+        type: string
+    required:
+      - start
+  CreateDamProviderResponse:
+    properties:
+      key:
+        type: string
+  ReadDamProviderResponse:
+    properties:
+      key:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  

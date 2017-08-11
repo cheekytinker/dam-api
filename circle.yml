@@ -1,0 +1,53 @@
+machine:
+  node:
+    version: 8.1.4
+  services:
+    - docker
+    - mongod
+    - rabbitmq-server
+  hosts:
+    mongo: 127.0.0.1
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+
+dependencies:
+  override:
+    - yarn install
+    - yarn run clean
+    - yarn run lint
+    - yarn run transpile
+  cache_directories:
+    - ~/.cache/yarn
+test:
+  override:
+    - yarn run test
+    - yarn run cover
+    - yarn run checkcover
+    - yarn run postman
+    - yarn run cucumber
+    - yarn run cucumberreport
+
+  post:
+    - mkdir -p $CIRCLE_ARTIFACTS/coverage-report
+    - mv coverage $CIRCLE_ARTIFACTS/coverage-report
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit
+    - mv test-results.xml $CIRCLE_TEST_REPORTS/junit
+    - mkdir -p $CIRCLE_TEST_REPORTS/postman
+    - mv postmanXmlResults.xml $CIRCLE_TEST_REPORTS/postman
+    - mv postmanHtmlResults.html $CIRCLE_TEST_REPORTS/postman
+
+deployment:
+  develop:
+    branch: develop
+    commands:
+      - docker info
+      - docker build -t elateral/dam-api:$CIRCLE_BRANCH .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push elateral/dam-api:$CIRCLE_BRANCH
+  production:
+    branch: /^(?!.*develop).*$/
+    commands:
+      - docker info
+      - docker build -t elateral/dam-api:latest .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push elateral/dam-api:latest

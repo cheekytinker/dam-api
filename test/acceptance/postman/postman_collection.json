@@ -1,0 +1,53 @@
+{
+	"variables": [],
+	"info": {
+		"name": "dam-api",
+		"_postman_id": "3aa60468-9c27-a777-1035-5846058c787d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "REST Create Dam Provider",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"tests[\"Should return 201 response code\"] = responseCode.code === 201;"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setEnvironmentVariable(\"accountName\",'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16); }));"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{host}}/damproviders",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"{{accountName}}\",\n\t\"type\": \"StyleLabs\"\n}"
+				},
+				"description": "create a Dam Provider"
+			},
+			"response": []
+		}
+	]
+}

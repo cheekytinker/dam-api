@@ -61,6 +61,13 @@ From the root of the project folder
 
 * yarn edit
 
+To edit swagger by hand you will find the yaml file in
+
+* src/config/swagger/swagger.yaml
+
+If you want to add middleware into the swagger pipeline take a look at src/config/default.yaml, where you can reference a bagpipes pipe fitting of your own creation and place in a folder named /src/api/fittings/.
+
+
 ## Run Locally
 
 From the root of the project folder

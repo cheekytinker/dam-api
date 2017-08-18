@@ -1,6 +1,6 @@
 import path from 'path';
-import restify from 'restify';
-import SwaggerRestify from 'swagger-restify-mw';
+import express from 'express';
+import SwaggerExpress from 'swagger-express-mw';
 import { log } from './utilities/logging';
 import appConfig from './config/appConfig';
 
@@ -11,10 +11,7 @@ function restServer() {
   if (server) {
     return server;
   }
-  server = restify.createServer({
-    name: appConfig.app.name,
-    version: appConfig.app.version,
-  });
+  server = express();
   return server;
 }
 
@@ -52,13 +49,13 @@ async function swaggerRestifyCreate() {
     swaggerFile: `${swaggerPath}`,
   };
   return new Promise((resolve, reject) => {
-    SwaggerRestify.create(swaggerConfig, (err, swaggerRestify) => {
+    SwaggerExpress.create(swaggerConfig, (err, swaggerRestify) => {
       /* istanbul ignore next */
       if (err) {
         log.error(`Error in swaggerRestifyCreate ${err}`);
         return reject(err);
       }
-      log.debug('SwaggerRestify Create successful');
+      log.debug('SwaggerExpress Create successful');
       return resolve(swaggerRestify);
     });
   });

@@ -17,7 +17,7 @@ function requestCreateDamProvider(name, type) {
     .set('Accept', 'application/json')
     .set('Content-Type', 'application/json')
     .send({ name, type })
-    .expect('Content-Type', 'application/json')
+    .expect('Content-Type', 'application/json; charset=utf-8')
     .then(res => Promise.resolve({ status: res.status, body: res.body }));
 }
 
